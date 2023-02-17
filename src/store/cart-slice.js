@@ -26,9 +26,21 @@ const cartSlice = createSlice({
             }
         },
         remoteItemFromCart(state, action) {
-            state.products = state.products.findIndex(action.payload)
+            const id = action.payload;
+            const existingItem = state.items.find(item => item.id === id);
+
+            // remove item from cart
+            if(existingItem.amount === 1) {
+                state.products = state.products.filter(item => item.id !== id);
+            }
+            // decrease amount in cart by 1, it it's more than 1 product from the same type
+            else {
+                existingItem.amount = existingItem.amount - 1;
+                existingItem.totalPrice = existingItem.totalPrice - existingItem.price;
+            }
         }
     }
 });
 
+export const cartSliceActions = cartSlice.actions;
 export default cartSlice;
