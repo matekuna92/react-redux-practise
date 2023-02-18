@@ -12,7 +12,7 @@ const cartSlice = createSlice({
 
             if(!existingItem) {
                 // can use push because of redux-toolkit, otherwise with only redux direct manipulation of existing state is not allowed!
-                state.items.push({
+                state.products.push({
                     id: newItem.id,
                     price: newItem.price,
                     amount: 1,
@@ -40,6 +40,7 @@ const cartSlice = createSlice({
             }
         }
     }
+    
 });
 
 export const cartSliceActions = cartSlice.actions;
