@@ -10,6 +10,8 @@ const cartSlice = createSlice({
             const newItem = action.payload;
             const existingItem = state.products.find(item => item.id === newItem.id);
 
+            state.totalAmount = state.totalAmount + 1;
+
             if(!existingItem) {
                 // can use push because of redux-toolkit, otherwise with only redux direct manipulation of existing state is not allowed!
                 state.products.push({
@@ -28,6 +30,8 @@ const cartSlice = createSlice({
         remoteItemFromCart(state, action) {
             const id = action.payload;
             const existingItem = state.items.find(item => item.id === id);
+
+            state.totalAmount = state.totalAmount - 1;
 
             // remove item from cart
             if(existingItem.amount === 1) {
