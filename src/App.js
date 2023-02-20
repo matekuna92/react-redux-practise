@@ -1,15 +1,20 @@
-import { useEffect } from 'react';
+import {Fragment, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Cart from './components/Cart/Cart';
 import Layout from './components/Layout/Layout';
 import Products from './components/Shop/Products';
 import { uiSliceActions } from './store/ui-slice';
+import Notification from "./components/UI/Notification";
+
+// initialising outside of component, so won't be changed and re-initialised when the component rerenders again
+let isInitialLoad = true;
 
 function App() {
   const show = useSelector(state => state.ui.isCartVisible);
   const cart = useSelector(state => state.cart);
   const dispatch = useDispatch();
+  const notification = useSelector(state => state.ui.notification);
 
   useEffect(() => {
       // async cannot be used inside useEffect! Requires sepereate function
@@ -41,6 +46,12 @@ function App() {
           }))
       };
 
+      // fix for success message that was appeared on first page load, not only while adding to cart. Block notification component on first load
+      if(isInitialLoad) {
+          isInitialLoad = false;
+          return;
+      }
+
       sendCardData().catch(error => {
           dispatch(uiSliceActions.showNotification({
               status: 'error',
@@ -51,10 +62,13 @@ function App() {
   }, [cart]);
 
   return (
-    <Layout>
-      {show && <Cart />}
-      <Products />
-    </Layout>
+    <Fragment>
+        {notification && <Notification status={notification.status} title={notification.title} message={notification.message} />}
+        <Layout>
+          {show && <Cart />}
+          <Products />
+        </Layout>
+    </Fragment>
   );
 }
 
