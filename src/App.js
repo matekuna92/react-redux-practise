@@ -31,12 +31,7 @@ function App() {
           });
 
           if(!response.ok) {
-              //throw new Error('Sending card data failed.');
-              dispatch(uiSliceActions.showNotification({
-                  status: 'error',
-                  title: 'Error',
-                  message: 'Sending card data failed'
-              }))
+              throw new Error('Sending card data failed.');
           }
 
           dispatch(uiSliceActions.showNotification({
