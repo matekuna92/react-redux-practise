@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { uiSliceActions } from './ui-slice';
 
 const initialState = { products: [], totalAmount: 0, totalPrice: 0 };
 
@@ -7,6 +6,12 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
+        // replace cart on fetch Data with fetched data
+        replaceCart(state, action) {
+            state.products = action.payload.products;
+            state.totalAmount = action.payload.totalAmount;
+        },
+
         addItemToCart(state, action) {
             const newItem = action.payload;
             const existingItem = state.products.find(item => item.id === newItem.id);
@@ -28,6 +33,7 @@ const cartSlice = createSlice({
                 existingItem.totalPrice = existingItem.totalPrice + newItem.price;
             }
         },
+        
         remoteItemFromCart(state, action) {
             const id = action.payload;
             const existingItem = state.products.find(item => item.id === id);
@@ -47,47 +53,6 @@ const cartSlice = createSlice({
     }
     
 });
-
-// action creator thunk - managing http request in a function instead of using useEffect in App.js
-// thunk - a function which delays an action until later, until something else finishes
-// doesnt return the action itself, but another function which returns the action
-export const sendCartData = (cart) => {
-    return async dispatch => {
-        dispatch(uiSliceActions.showNotification({
-            status: 'pending',
-            title: 'Sending...',
-            message: 'Sending card data'
-        }));
-
-        const sendRequest = async () => {
-            const response = await fetch('https://react-redux-319a7-default-rtdb.europe-west1.firebasedatabase.app/cart.json', {
-                method: 'PUT',
-                body: JSON.stringify(cart)
-            });
-
-            if(!response.ok) {
-                throw new Error('Sending card data failed.');
-            }
-        };
-
-        // handling errors
-        try {
-            await sendRequest();
-
-            dispatch(uiSliceActions.showNotification({
-                status: 'success',
-                title: 'Success',
-                message: 'Sent card data successfully'
-            }));
-        } catch(error) {
-            dispatch(uiSliceActions.showNotification({
-                status: 'error',
-                title: 'Error',
-                message: 'Sending card data failed'
-            }));
-        }
-    };
-};
 
 export const cartSliceActions = cartSlice.actions;
 export default cartSlice;

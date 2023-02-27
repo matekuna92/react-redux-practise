@@ -5,7 +5,7 @@ import Cart from './components/Cart/Cart';
 import Layout from './components/Layout/Layout';
 import Products from './components/Shop/Products';
 import Notification from "./components/UI/Notification";
-import { sendCartData } from './store/cart-slice';
+import { sendCartData, fetchCartData } from './store/cart-actions';
 
 // initialising outside of component, so won't be changed and re-initialised when the component rerenders again
 let isInitialLoad = true;
@@ -15,6 +15,10 @@ function App() {
   const cart = useSelector(state => state.cart);
   const dispatch = useDispatch();
   const notification = useSelector(state => state.ui.notification);
+
+  useEffect(() => {
+      dispatch(fetchCartData());
+  }, [dispatch]);
 
   useEffect(() => {
       if(isInitialLoad) {
@@ -62,7 +66,7 @@ function App() {
 //              message: 'Sending card data failed'
 //          }));
  //     });
-  }, [cart]);
+  }, [cart, dispatch]);
 
   return (
     <Fragment>
