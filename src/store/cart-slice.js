@@ -8,7 +8,8 @@ const cartSlice = createSlice({
     reducers: {
         // replace cart on fetch Data with fetched data
         replaceCart(state, action) {
-            state.products = action.payload.products;
+            // fix cannot read undefined error if cart is empty, firebase has no "products", so items cannot be added to empty cart
+            state.products = action.payload.products || [];
             state.totalAmount = action.payload.totalAmount;
         },
 
