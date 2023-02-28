@@ -26,7 +26,10 @@ function App() {
           return;
       }
 
-      dispatch(sendCartData(cart));
+      if(cart.changed) {
+          dispatch(sendCartData(cart));
+      }
+  }, [cart, dispatch]);
 
 
 //      // async cannot be used inside useEffect! Requires sepereate function
@@ -65,8 +68,7 @@ function App() {
 //              title: 'Error',
 //              message: 'Sending card data failed'
 //          }));
- //     });
-  }, [cart, dispatch]);
+ //     })
 
   return (
     <Fragment>

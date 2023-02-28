@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = { products: [], totalAmount: 0, totalPrice: 0 };
+const initialState = { products: [], totalAmount: 0, totalPrice: 0, changed: false };
 
 const cartSlice = createSlice({
     name: 'cart',
@@ -17,6 +17,7 @@ const cartSlice = createSlice({
             const existingItem = state.products.find(item => item.id === newItem.id);
 
             state.totalAmount = state.totalAmount + 1;
+            state.changed = true;
 
             if(!existingItem) {
                 // can use push because of redux-toolkit, otherwise with only redux direct manipulation of existing state is not allowed!
@@ -39,6 +40,7 @@ const cartSlice = createSlice({
             const existingItem = state.products.find(item => item.id === id);
 
             state.totalAmount = state.totalAmount - 1;
+            state.changed = true;
 
             // remove item from cart
             if(existingItem.amount === 1) {
